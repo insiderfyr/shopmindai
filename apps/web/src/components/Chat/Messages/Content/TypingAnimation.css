@@ -1,0 +1,419 @@
+/* 🚀 CHATGPT-LEVEL ULTRA-SMOOTH TYPING ANIMATION SYSTEM */
+
+/* ===== PERFORMANCE FOUNDATION (ChatGPT-optimized) ===== */
+.typing-animation {
+  /* 🚀 GENIUS: Maximum hardware acceleration for ChatGPT-like smoothness */
+  transform: translate3d(0, 0, 0);
+  backface-visibility: hidden;
+  perspective: 1000px;
+  transform-style: preserve-3d;
+  
+  /* 🚀 Enhanced containment for ultimate performance */
+  contain: layout style paint size;
+  
+  /* 🚀 Better isolation with compositing hints */
+  isolation: isolate;
+  
+  /* 🚀 Optimized will-change for specific properties */
+  will-change: auto;
+  
+  /* 🚀 Enhanced text rendering for crisp typing */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeSpeed;
+}
+
+/* 🚀 GENIUS: High refresh rate optimizations */
+.typing-animation.high-refresh-rate {
+  /* Enhanced smoothness for 120Hz+ displays */
+  animation-timing-function: cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+/* ===== PRE-ANIMATION STATE ===== */
+.typing-animation.pre-animation {
+  opacity: 0;
+  transform: translate3d(0, 6px, 0) scale(0.99);
+  filter: blur(0.8px) brightness(0.92);
+  transition: none;
+  will-change: transform, opacity, filter;
+}
+
+/* ===== CHATGPT-STYLE ENTRANCE ANIMATION ===== */
+.typing-animation.entrance-animation {
+  animation: message-entrance-chatgpt 120ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  will-change: transform, opacity, filter;
+}
+
+@keyframes message-entrance-chatgpt {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, 4px, 0) scale(0.995);
+    filter: blur(0.5px) brightness(0.95);
+  }
+  30% {
+    opacity: 0.8;
+    transform: translate3d(0, 1px, 0) scale(0.998);
+    filter: blur(0.2px) brightness(0.98);
+  }
+  100% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+    filter: blur(0) brightness(1);
+  }
+}
+
+/* ===== TYPING ACTIVE STATE ===== */
+.typing-animation.typing-active {
+  position: relative;
+  will-change: transform;
+  /* 🚀 Enhanced containment during typing */
+  contain: layout style paint size;
+}
+
+/* 🚀 CHATGPT-STYLE: Subtle breathing effect */
+.typing-animation.typing-active.breathing-effect {
+  animation: message-breathing-chatgpt 2.2s ease-in-out infinite;
+}
+
+@keyframes message-breathing-chatgpt {
+  0%, 100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(0, 0, 0) scale(1.0012); /* 🚀 Slightly more noticeable like ChatGPT */
+  }
+}
+
+/* 🚀 CHATGPT-STYLE: Enhanced cursor with perfect timing */
+.typing-animation.typing-active .result-streaming > :not(ol):not(ul):not(pre):last-child:after,
+.typing-animation.typing-active .result-streaming > pre:last-child code:after {
+  display: inline-block;
+  content: '█';
+  width: auto;
+  height: auto;
+  font-family: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+  line-height: normal;
+  margin-left: 0.06rem; /* 🚀 Tighter spacing like ChatGPT */
+  vertical-align: baseline;
+  font-size: 0.9em; /* 🚀 Slightly larger for better visibility */
+  color: hsl(var(--primary));
+  animation: cursor-pulse-chatgpt 800ms cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  will-change: opacity, transform;
+  /* 🚀 ChatGPT-level text rendering */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeSpeed;
+}
+
+/* 🚀 CHATGPT-STYLE: Perfect cursor pulse timing */
+@keyframes cursor-pulse-chatgpt {
+  0%, 50% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  51%, 99% {
+    opacity: 0.3; /* 🚀 More visible minimum like ChatGPT */
+    transform: scale(0.99); /* 🚀 Subtler scale change */
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* 🚀 Enhanced list support with better selectors */
+@supports (selector(:has(*))) {
+  .typing-animation.typing-active .result-streaming > :is(ul, ol):last-child > li:last-child:not(:has(> :is(ul, ol, pre))):after {
+    content: '█';
+    font-family: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+    line-height: normal;
+    margin-left: 0.08rem;
+    vertical-align: baseline;
+    font-size: 0.88em;
+    display: inline-block;
+    width: auto;
+    height: auto;
+    color: hsl(var(--primary));
+    animation: cursor-pulse-chatgpt 1s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+    will-change: opacity, transform;
+  }
+}
+
+@supports not (selector(:has(*))) {
+  .typing-animation.typing-active .result-streaming > ol:last-child > li:last-child:after,
+  .typing-animation.typing-active .result-streaming > ul:last-child > li:last-child:after {
+    content: '█';
+    font-family: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+    line-height: normal;
+    margin-left: 0.08rem;
+    vertical-align: baseline;
+    font-size: 0.88em;
+    display: inline-block;
+    width: auto;
+    height: auto;
+    color: hsl(var(--primary));
+    animation: cursor-pulse-chatgpt 1s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+    will-change: opacity, transform;
+  }
+}
+
+/* ===== COMPLETION ANIMATION ===== */
+.typing-animation.completion-animation {
+  animation: completion-settle-genius 400ms cubic-bezier(0.23, 1, 0.32, 1) forwards;
+  will-change: transform, box-shadow;
+}
+
+@keyframes completion-settle-genius {
+  0% {
+    transform: translate3d(0, 0, 0) scale(1.0008);
+    box-shadow: 0 0 16px rgba(var(--primary-rgb, 59, 130, 246), 0.08);
+  }
+  60% {
+    transform: translate3d(0, 0, 0) scale(1.0003);
+    box-shadow: 0 0 8px rgba(var(--primary-rgb, 59, 130, 246), 0.04);
+  }
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+    box-shadow: 0 0 0px rgba(var(--primary-rgb, 59, 130, 246), 0);
+  }
+}
+
+/* 🚀 GENIUS: Smooth cursor fade with micro-spring */
+.typing-animation.completion-animation .result-streaming > :not(ol):not(ul):not(pre):last-child:after,
+.typing-animation.completion-animation .result-streaming > pre:last-child code:after {
+  animation: cursor-fade-out-genius 250ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+@keyframes cursor-fade-out-genius {
+  0% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.5;
+    transform: scale(0.95);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+}
+
+/* ===== SETTLED STATE ===== */
+.typing-animation.settled {
+  animation: final-polish-genius 500ms cubic-bezier(0.25, 1, 0.3, 1) forwards;
+  will-change: filter, letter-spacing;
+}
+
+@keyframes final-polish-genius {
+  0% {
+    filter: contrast(1) saturate(1);
+    letter-spacing: normal;
+  }
+  100% {
+    filter: contrast(1.01) saturate(1.02);
+    letter-spacing: -0.3px;
+  }
+}
+
+/* ===== CONTENT-AWARE ADAPTATIONS ===== */
+
+/* 🚀 GENIUS: Enhanced code block animation */
+.typing-animation.typing-active.has-code .result-streaming pre code {
+  animation: code-typing-genius 1.2s ease-in-out infinite;
+}
+
+@keyframes code-typing-genius {
+  0%, 100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(0, 0, 0) scale(1.001);
+  }
+}
+
+.typing-animation.typing-active.has-code .result-streaming pre code:after {
+  font-size: 0.85em;
+  color: hsl(var(--primary));
+  animation: cursor-pulse-chatgpt 0.7s ease-in-out infinite;
+}
+
+/* 🚀 Enhanced mathematics animation */
+.typing-animation.typing-active.has-math .result-streaming .math {
+  animation: math-typing-genius 2s ease-in-out infinite;
+}
+
+@keyframes math-typing-genius {
+  0%, 100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(0, 0, 0) scale(1.002);
+  }
+}
+
+/* 🚀 GENIUS: Emoji-specific animations */
+.typing-animation.typing-active.has-emoji .result-streaming {
+  animation: emoji-typing-genius 1.5s ease-in-out infinite;
+}
+
+@keyframes emoji-typing-genius {
+  0%, 100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(0, 0, 0) scale(1.001);
+  }
+}
+
+.typing-animation.typing-active.has-emoji .result-streaming > :not(ol):not(ul):not(pre):last-child:after {
+  animation: cursor-pulse-chatgpt 0.8s ease-in-out infinite;
+  color: hsl(var(--primary));
+}
+
+/* ===== MICRO-INTERACTIONS ===== */
+
+/* 🚀 GENIUS: Buttery-smooth hover interactions */
+.typing-animation.typing-active:hover {
+  animation: hover-during-typing-genius 0.25s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+@keyframes hover-during-typing-genius {
+  0% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  100% {
+    transform: translate3d(0, -1px, 0) scale(1.001);
+    box-shadow: 0 2px 12px rgba(var(--primary-rgb, 59, 130, 246), 0.06);
+  }
+}
+
+.typing-animation.typing-active:hover .result-streaming > :not(ol):not(ul):not(pre):last-child:after,
+.typing-animation.typing-active:hover .result-streaming > pre:last-child code:after {
+  animation: cursor-pulse-chatgpt 0.6s ease-in-out infinite;
+  opacity: 1;
+  transform: scale(1.05);
+}
+
+/* ===== MOBILE OPTIMIZATIONS ===== */
+@media (max-width: 768px) {
+  .typing-animation.typing-active.breathing-effect {
+    animation: message-breathing-mobile-genius 1.3s ease-in-out infinite;
+  }
+  
+  @keyframes message-breathing-mobile-genius {
+    0%, 100% {
+      transform: translate3d(0, 0, 0) scale(1);
+    }
+    50% {
+      transform: translate3d(0, 0, 0) scale(1.0004);
+    }
+  }
+  
+  .typing-animation.typing-active .result-streaming > :not(ol):not(ul):not(pre):last-child:after,
+  .typing-animation.typing-active .result-streaming > pre:last-child code:after {
+    font-size: 0.8em;
+    animation: cursor-pulse-chatgpt 0.9s ease-in-out infinite;
+  }
+}
+
+/* 🚀 GENIUS: Enhanced dark mode with better contrast */
+.dark .typing-animation.typing-active .result-streaming > :not(ol):not(ul):not(pre):last-child:after,
+.dark .typing-animation.typing-active .result-streaming > pre:last-child code:after {
+  color: hsl(var(--primary));
+  text-shadow: 0 0 3px rgba(var(--primary-rgb, 59, 130, 246), 0.4);
+  filter: brightness(1.1);
+}
+
+/* 🚀 Enhanced progress indicator */
+.typing-progress {
+  position: absolute;
+  top: -1px;
+  left: 0;
+  height: 1.5px;
+  background: linear-gradient(90deg, 
+    hsl(var(--primary)) 0%, 
+    hsl(var(--primary) / 0.7) 70%, 
+    hsl(var(--primary) / 0.3) 100%
+  );
+  border-radius: 2px;
+  transition: width 0.08s cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: width;
+  box-shadow: 0 0 4px rgba(var(--primary-rgb, 59, 130, 246), 0.3);
+}
+
+/* ===== ACCESSIBILITY ===== */
+@media (prefers-reduced-motion: reduce) {
+  .typing-animation {
+    animation: none !important;
+    transition: none !important;
+  }
+  
+  .typing-animation .result-streaming > :not(ol):not(ul):not(pre):last-child:after,
+  .typing-animation .result-streaming > pre:last-child code:after {
+    animation: none !important;
+    opacity: 1 !important;
+  }
+}
+
+/* 🚀 GENIUS: High contrast mode support */
+@media (prefers-contrast: high) {
+  .typing-animation.typing-active .result-streaming > :not(ol):not(ul):not(pre):last-child:after,
+  .typing-animation.typing-active .result-streaming > pre:last-child code:after {
+    color: CurrentColor;
+    text-shadow: none;
+    font-weight: bold;
+  }
+}
+
+/* 🚀 Ultra-smooth text rendering for all states */
+.typing-animation * {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeSpeed;
+}
+
+/* 🚀 Optimize for smooth scrolling during typing */
+.typing-animation.typing-active {
+  scroll-behavior: smooth;
+}
+
+/* 🚀 Performance monitoring indicators */
+.typing-animation.typing-active::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(90deg, 
+    hsl(var(--primary)) 0%, 
+    hsl(var(--primary) / 0.5) 50%, 
+    transparent 100%
+  );
+  opacity: 0.3;
+  animation: performance-indicator 2s ease-in-out infinite;
+}
+
+@keyframes performance-indicator {
+  0%, 100% {
+    opacity: 0.3;
+  }
+  50% {
+    opacity: 0.6;
+  }
+}
+
+/* 🚀 Smooth transitions for all interactive elements */
+.typing-animation.typing-active * {
+  transition: all 0.1s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* 🚀 Enhanced focus states for accessibility */
+.typing-animation.typing-active:focus-within {
+  outline: 2px solid hsl(var(--primary) / 0.3);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+

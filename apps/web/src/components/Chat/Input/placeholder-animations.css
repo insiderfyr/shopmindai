@@ -1,0 +1,32 @@
+/* GENIUS placeholder animation: Perfect 15s loop with smooth transitions */
+@keyframes placeholderFadeIn {
+  0% {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes placeholderFadeOut {
+  0% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+}
+
+/* Apply smooth appearance animation to placeholder */
+.dynamic-placeholder {
+  animation: placeholderFadeIn 0.8s ease-out;
+}
+
+/* Smooth transition for placeholder changes - optimized for 15s loop */
+.dynamic-placeholder-transition {
+  transition: opacity 0.8s ease-in-out, transform 0.8s ease-in-out;
+}

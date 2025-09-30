@@ -1,0 +1,75 @@
+_format_version: '3.0'
+_transform: true
+
+services:
+  - name: auth-service
+    url: http://shopmind-auth-service:8080
+    retries: 3
+    connect_timeout: 6000
+    write_timeout: 30000
+    read_timeout: 30000
+    routes:
+      - name: auth-api-v1
+        paths:
+          - /api/v1/auth
+          - /api/v1/user
+        strip_path: false
+        methods: [GET, POST, PUT, PATCH, DELETE, OPTIONS]
+        tags: [auth, v1]
+      - name: auth-frontend
+        paths:
+          - /api/auth
+        strip_path: false
+        methods: [GET, POST, OPTIONS]
+        tags: [auth, frontend]
+
+  - name: mock-api
+    url: http://host.docker.internal:3080
+    retries: 2
+    connect_timeout: 6000
+    write_timeout: 30000
+    read_timeout: 30000
+    routes:
+      - name: mock-api-rest
+        paths:
+          - /api
+        strip_path: false
+        methods: [GET, POST, PUT, PATCH, DELETE, OPTIONS]
+        tags: [mock, rest]
+      - name: mock-orchestrator
+        paths:
+          - /orchestrator
+        strip_path: false
+        methods: [GET, POST, OPTIONS]
+        tags: [mock]
+      - name: mock-llm
+        paths:
+          - /llm
+        strip_path: false
+        methods: [GET, POST, OPTIONS]
+        tags: [mock]
+      - name: mock-chat
+        paths:
+          - /chat
+        strip_path: false
+        methods: [GET, POST, OPTIONS]
+        tags: [mock]
+
+plugins:
+  - name: cors
+    config:
+      origins:
+        - '*'
+      methods: [GET, POST, PUT, PATCH, DELETE, OPTIONS]
+      headers: [Accept, Accept-Version, Authorization, Content-Length, Content-MD5, Content-Type, Date, X-Requested-With]
+      exposed_headers: [X-Auth-Token]
+      credentials: true
+      max_age: 3600
+    tags: [global, cors]
+
+  - name: correlation-id
+    config:
+      header_name: X-Request-ID
+      generator: uuid#counter
+      echo_downstream: true
+    tags: [global, observability]

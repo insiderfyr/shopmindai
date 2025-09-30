@@ -1,0 +1,216 @@
+/* Responsive Chat Component Styles */
+
+/* Mobile-first responsive design */
+.chat-container {
+  transition: all 0.3s ease-in-out;
+}
+
+/* Mobile optimizations */
+@media (max-width: 767px) {
+  .chat-container {
+    padding: 0.5rem;
+  }
+  
+  .chat-form-mobile {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 50;
+    background: white;
+    border-top: 1px solid #e5e7eb;
+    padding: 1rem;
+    box-shadow: 0 -4px 6px -1px rgba(0, 0, 0, 0.1);
+  }
+  
+  .chat-messages-mobile {
+    padding-bottom: 5rem;
+  }
+  
+  .chat-header-mobile {
+    height: 3rem;
+    padding: 0.5rem;
+  }
+  
+  .chat-spinner-mobile {
+    width: 1.5rem;
+    height: 1.5rem;
+  }
+}
+
+/* Tablet optimizations */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .chat-container {
+    padding: 1rem;
+  }
+  
+  .chat-form-tablet {
+    width: 91.666667%;
+    margin: 0 auto;
+    padding: 0 0.75rem;
+  }
+  
+  .chat-header-tablet {
+    height: 3.5rem;
+    padding: 0.5rem;
+  }
+  
+  .chat-spinner-tablet {
+    width: 2rem;
+    height: 2rem;
+  }
+}
+
+/* Desktop optimizations */
+@media (min-width: 1024px) {
+  .chat-container {
+    padding: 1.5rem;
+  }
+  
+  .chat-form-desktop {
+    width: 80%;
+    margin: 0 auto;
+    padding: 0 1rem;
+  }
+  
+  .chat-header-desktop {
+    height: 4rem;
+    padding: 0.75rem;
+  }
+  
+  .chat-spinner-desktop {
+    width: 2.5rem;
+    height: 2.5rem;
+  }
+}
+
+/* Landscape orientation optimizations */
+@media (orientation: landscape) and (max-height: 600px) {
+  .chat-container {
+    height: calc(100vh - 60px);
+  }
+  
+  .chat-form-mobile {
+    position: relative;
+    bottom: auto;
+    left: auto;
+    right: auto;
+    z-index: auto;
+    background: transparent;
+    border-top: none;
+    padding: 0.5rem;
+    box-shadow: none;
+  }
+  
+  .chat-messages-mobile {
+    padding-bottom: 1rem;
+  }
+}
+
+/* High DPI displays */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  .chat-container {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+}
+
+/* Touch device optimizations */
+@media (hover: none) and (pointer: coarse) {
+  .chat-container {
+    -webkit-tap-highlight-color: transparent;
+  }
+  
+  .chat-form-mobile {
+    padding: 1.25rem;
+  }
+  
+  .chat-input-touch {
+    font-size: 16px; /* Prevents zoom on iOS */
+    line-height: 1.5;
+  }
+}
+
+/* Reduced motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  .chat-container,
+  .chat-form-mobile,
+  .chat-form-tablet,
+  .chat-form-desktop {
+    transition: none;
+  }
+}
+
+/* Dark mode optimizations */
+@media (prefers-color-scheme: dark) {
+  .chat-form-mobile {
+    background: #1f2937;
+    border-top-color: #374151;
+  }
+}
+
+/* Print styles */
+@media print {
+  .chat-container {
+    padding: 0;
+    border: none;
+  }
+  
+  .chat-form-mobile,
+  .chat-form-tablet,
+  .chat-form-desktop {
+    display: none;
+  }
+}
+
+/* Accessibility improvements */
+@media (prefers-contrast: high) {
+  .chat-container {
+    border-width: 2px;
+  }
+  
+  .chat-form-mobile {
+    border-top-width: 2px;
+  }
+}
+
+/* Focus styles for keyboard navigation */
+.chat-container:focus-within {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+}
+
+/* Smooth scrolling for all devices */
+.chat-messages {
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Custom scrollbar for webkit browsers */
+.chat-messages::-webkit-scrollbar {
+  width: 6px;
+}
+
+.chat-messages::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.chat-messages::-webkit-scrollbar-thumb {
+  background: #d1d5db;
+  border-radius: 3px;
+}
+
+.chat-messages::-webkit-scrollbar-thumb:hover {
+  background: #9ca3af;
+}
+
+/* Dark mode scrollbar */
+@media (prefers-color-scheme: dark) {
+  .chat-messages::-webkit-scrollbar-thumb {
+    background: #4b5563;
+  }
+  
+  .chat-messages::-webkit-scrollbar-thumb:hover {
+    background: #6b7280;
+  }
+}

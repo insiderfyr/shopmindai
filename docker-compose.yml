@@ -1,0 +1,116 @@
+version: "3.9"
+
+networks:
+  app-network:
+    driver: bridge
+
+services:
+  gateway:
+    image: kong:3.6
+    container_name: kong-gateway
+    restart: unless-stopped
+    environment:
+      KONG_DATABASE: off
+      KONG_DECLARATIVE_CONFIG: /etc/kong/kong.yaml
+      KONG_LOG_LEVEL: notice
+      KONG_PROXY_ACCESS_LOG: /dev/stdout
+      KONG_PROXY_ERROR_LOG: /dev/stderr
+      KONG_ADMIN_ACCESS_LOG: /dev/null
+      KONG_ADMIN_ERROR_LOG: /dev/stderr
+      KONG_PROXY_LISTEN: 0.0.0.0:8000,0.0.0.0:8443 ssl
+      KONG_ADMIN_LISTEN: 127.0.0.1:8001,127.0.0.1:8444 ssl
+      KONG_STATUS_LISTEN: 0.0.0.0:8100
+      KONG_ADMIN_TOKEN: ${KONG_ADMIN_TOKEN:-change-me}
+      KONG_PLUGINS: bundled
+      KONG_REAL_IP_HEADER: X-Forwarded-For
+      KONG_REAL_IP_RECURSIVE: 'on'
+      KONG_NGINX_WORKER_PROCESSES: '2'
+    ports:
+      - '8088:8000'
+      - '8443:8443'
+      - '127.0.0.1:8001:8001'
+      - '127.0.0.1:8444:8444'
+      - '8100:8100'
+    extra_hosts:
+      - 'host.docker.internal:host-gateway'
+    volumes:
+      - ./infra/gateway/kong.yaml:/etc/kong/kong.yaml:ro
+    healthcheck:
+      test: ['CMD', 'kong', 'health']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    networks:
+      - app-network
+
+  llm-proxy:
+    build:
+      context: ./services-new/llm-proxy
+      dockerfile: Dockerfile
+    container_name: llm-proxy
+    environment:
+      - APP_PORT=9000
+      - APP_ENV=dev
+      - ALLOWED_ORIGINS=*
+      - LLM_PROVIDER=${LLM_PROVIDER}
+      - LLM_API_KEY=${LLM_API_KEY}
+      - LLM_BASE_URL=${LLM_BASE_URL}
+      - LLM_MODEL=${LLM_MODEL}
+      - LLM_MAX_TOKENS=${LLM_MAX_TOKENS}
+      - LLM_TEMPERATURE=${LLM_TEMPERATURE}
+    ports:
+      - "9000:9000"
+    networks:
+      - app-network
+
+  api:
+    build:
+      context: ./services-new/orchestrator
+      dockerfile: Dockerfile
+    container_name: orchestrator
+    environment:
+      - APP_PORT=3080
+      - APP_ENV=dev
+      - ALLOWED_ORIGINS=*
+      - LLM_PROXY_URL=http://llm-proxy:9000
+    ports:
+      - "3080:3080"
+    depends_on:
+      - llm-proxy
+      - gateway
+    networks:
+      - app-network
+
+  chat-service:
+    build:
+      context: ./services-new/chat-service
+      dockerfile: Dockerfile
+    container_name: chat-service
+    environment:
+      - APP_PORT=8080
+      - APP_ENV=dev
+      - ALLOWED_ORIGINS=*
+    ports:
+      - "8082:8080"
+    depends_on:
+      - api
+      - gateway
+    networks:
+      - app-network
+
+  web:
+    build:
+      context: ./apps/web
+      dockerfile: Dockerfile
+    container_name: web
+    ports:
+      - "3000:80"
+    environment:
+      - VITE_API_BASE_URL=http://localhost:8088
+      - VITE_GATEWAY_URL=http://localhost:8088
+    depends_on:
+      - api
+      - gateway
+    networks:
+      - app-network

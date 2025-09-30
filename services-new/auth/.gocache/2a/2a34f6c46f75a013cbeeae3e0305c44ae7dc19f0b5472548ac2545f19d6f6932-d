@@ -1,0 +1,4 @@
+# test log
+getenv LOG_LEVEL
+getenv LOG_LEVEL
+getenv LOG_LEVEL
