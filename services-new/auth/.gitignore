@@ -6,12 +6,22 @@
 *.dylib
 bin/
 dist/
+main
+*.bin
 
 # Test binary, built with `go test -c`
 *.test
 
 # Output of the go coverage tool, specifically when used with LiteIDE
 *.out
+
+# Go build cache
+.gocache/
+.cache-go/
+
+# Go module cache
+pkg/mod/
+go.sum.tmp
 
 # Dependency directories (remove the comment below to include it)
 # vendor/
@@ -50,6 +60,10 @@ temp/
 
 # Docker
 .dockerignore
+*.pid
+*.seed
+*.bak
+*.backup
 
 # Coverage reports
 coverage.out
@@ -57,3 +71,16 @@ coverage.html
 
 # Air (live reload) temp files
 tmp/
+
+# Keycloak local data
+keycloak-*/data/
+keycloak-*/themes/
+
+# Database & Redis local volumes
+postgres-data/
+redis-data/
+
+# Certificates
+*.pem
+*.key
+*.crt

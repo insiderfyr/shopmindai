@@ -1,216 +1,122 @@
-# Auth Service
+# Auth Service with Keycloak - ShopMindAI
 
-A production-ready authentication microservice built with Go, Gin framework, and Keycloak integration.
+This is an authentication microservice project built with Go, which uses Keycloak as an Identity Provider. The project runs in a Docker containerized environment using Docker Compose, along with PostgreSQL for storing authentication data and Redis for caching and sessions.
 
-## Features
-
-- **Authentication**: Login, registration, token refresh, logout
-- **User Management**: Profile management, password change
-- **JWT Validation**: Middleware for protecting routes
-- **Keycloak Integration**: Full integration with Keycloak for identity management
-- **Docker Support**: Complete Docker setup with docker-compose
-- **Logging**: Structured logging with logrus
-- **Configuration**: Environment-based configuration with Viper
+---
 
 ## Project Structure
 
 ```
-auth-service/
-├── cmd/
-│   └── main.go                 # Application entry point
-├── internal/
-│   ├── config/
-│   │   └── config.go           # Configuration management
-│   ├── handlers/
-│   │   ├── auth.go            # Authentication handlers
-│   │   └── user.go            # User management handlers
-│   ├── services/
-│   │   └── keycloak.go        # Keycloak service wrapper
-│   ├── middleware/
-│   │   └── auth_middleware.go # JWT validation middleware
-│   └── models/
-│       └── auth.go            # Data models
-├── pkg/
-│   └── logger/
-│       └── logger.go          # Reusable logger package
-├── go.mod                     # Go module file
-├── go.sum                     # Go dependencies checksum
-├── Dockerfile                 # Docker build configuration
-├── docker-compose.yml         # Docker Compose configuration
-└── README.md                  # This file
+.
+├── auth-service
+├── cmd
+│   └── main.go
+├── docker-compose.yml
+├── Dockerfile
+├── execute.sh
+├── go.mod
+├── go.sum
+├── internal
+│   ├── config
+│   │   └── config.go
+│   ├── handlers
+│   │   ├── auth_test.go
+│   │   ├── auth.go
+│   │   ├── frontend.go
+│   │   └── user.go
+│   ├── middleware
+│   │   └── auth_middleware.go
+│   ├── models
+│   │   └── auth.go
+│   └── services
+│       └── keycloak.go
+├── keycloak
+│   └── Dockerfile
+├── keycloak-23.0.7
+│   └── version.txt
+├── main
+├── Makefile
+├── pkg
+│   └── logger
+│       └── logger.go
+├── README.md
+├── shopmindai-realm.json
+└── test
+    └── integration_test.go
 ```
 
-## API Endpoints
+---
 
-### Public Endpoints (No Authentication Required)
+## Running the Service
 
-- `POST /api/v1/auth/login` - User login
-- `POST /api/v1/auth/register` - User registration
-- `POST /api/v1/auth/refresh` - Token refresh
-- `POST /api/v1/auth/logout` - User logout
-- `GET /health` - Health check
-
-### Protected Endpoints (Authentication Required)
-
-- `GET /api/v1/user/profile` - Get user profile
-- `PUT /api/v1/user/profile` - Update user profile
-- `POST /api/v1/user/change-password` - Change password
-
-## Environment Variables
-
-Create a `.env` file with the following variables:
-
-```env
-# Server Configuration
-SERVER_ADDRESS=:8080
-SERVER_PORT=8080
-SERVER_MODE=debug
-
-# Keycloak Configuration
-KEYCLOAK_URL=http://localhost:8081/auth
-KEYCLOAK_REALM=master
-KEYCLOAK_CLIENT_ID=auth-service
-KEYCLOAK_CLIENT_SECRET=your-client-secret
-KEYCLOAK_ADMIN_USER=admin
-KEYCLOAK_ADMIN_PASS=admin
-
-# JWT Configuration
-JWT_SECRET_KEY=your-secret-key-change-in-production
-JWT_ISSUER=auth-service
-JWT_EXPIRY=3600
-
-# Logging Configuration
-LOG_LEVEL=info
-```
-
-## Quick Start
-
-### Using Docker Compose (Recommended)
-
-1. Clone the repository
-2. Create a `.env` file with your configuration
-3. Run the services:
-
+### Run with Docker
 ```bash
-docker-compose up -d
+docker-compose up --build
 ```
 
-This will start:
-- Auth service on port 8080
-- Keycloak on port 8081
-- Optional PostgreSQL and Redis (with `--profile production`)
-
-### Manual Setup
-
-1. Install Go 1.21 or later
-2. Install dependencies:
-
-```bash
-go mod download
-```
-
-3. Start Keycloak (using Docker):
-
-```bash
-docker run -p 8081:8080 -e KEYCLOAK_ADMIN=admin -e KEYCLOAK_ADMIN_PASSWORD=admin quay.io/keycloak/keycloak:23.0 start-dev
-```
-
-4. Create a `.env` file with your configuration
-5. Run the application:
-
+### Run Locally
 ```bash
 go run cmd/main.go
 ```
 
-## Keycloak Setup
+---
 
-1. Access Keycloak admin console at `http://localhost:8081`
-2. Login with admin/admin
-3. Create a new realm or use the master realm
-4. Create a new client:
-   - Client ID: `auth-service`
-   - Client Protocol: `openid-connect`
-   - Access Type: `confidential`
-   - Valid Redirect URIs: `*`
-   - Service Accounts Enabled: `ON`
+## Environment Variables
 
-## API Usage Examples
+### Database
+- `POSTGRES_PASSWORD`
 
-### Login
+### Redis
+- `REDIS_PASSWORD`
 
-```bash
-curl -X POST http://localhost:8080/api/v1/auth/login \
-  -H "Content-Type: application/json" \
-  -d '{
-    "username": "your-username",
-    "password": "your-password"
-  }'
-```
+### Keycloak
+- `KEYCLOAK_ADMIN`
+- `KEYCLOAK_ADMIN_PASSWORD`
+- `KEYCLOAK_CLIENT_ID`
+- `KEYCLOAK_CLIENT_SECRET`
 
-### Register
+### Internal Mappings (Optional)
+These are also used for Keycloak and the database.
+- `KEYCLOAK_ADMIN_USER=${KEYCLOAK_ADMIN}`
+- `KEYCLOAK_ADMIN_PASS=${KEYCLOAK_ADMIN_PASSWORD}`
+- `KC_DB_PASSWORD=${POSTGRES_PASSWORD}`
+- `DB_PASSWORD=${POSTGRES_PASSWORD}`
 
-```bash
-curl -X POST http://localhost:8080/api/v1/auth/register \
-  -H "Content-Type: application/json" \
-  -d '{
-    "username": "newuser",
-    "email": "user@example.com",
-    "password": "password123",
-    "first_name": "John",
-    "last_name": "Doe"
-  }'
-```
+### Logging (from code)
+- `LOG_LEVEL=debug`
 
-### Get Profile (Protected)
+---
 
-```bash
-curl -X GET http://localhost:8080/api/v1/user/profile \
-  -H "Authorization: Bearer YOUR_ACCESS_TOKEN"
-```
+## API Endpoints
 
-## Development
+This microservice exposes a set of REST API endpoints using the **Gin** framework, organized into functional groups:
 
-### Running Tests
+### Authentication (`/api/auth`)
+Handles login and security flows:
+- `POST /login` – Authenticate a user and return a JWT token.
+- `POST /register` – Create a new user account.
+- `POST /refresh` – Refresh the access token.
+- `POST /logout` – Invalidate the current session.
+- `GET /config` – Retrieve Keycloak client configuration.
 
-```bash
-go test ./...
-```
+### User Profile (`/api/auth`)
+Provides access and update capabilities for user data:
+- `GET /profile` – Fetch the current user profile.
+- `PUT /profile` – Update user profile information.
+- `POST /change-password` – Change the user password.
 
-### Building
+### General API (`/api`)
+Endpoints for application information and status:
+- `GET /banner` – Retrieve banner information.
+- `GET /config` – Retrieve application configuration.
+- `GET /app/info` – Fetch application details.
+- `GET /health/detailed` – Perform a detailed health check.
+- `GET /endpoints` – List all exposed endpoints.
+- `GET /startup` – Check service startup status.
 
-```bash
-go build -o auth-service cmd/main.go
-```
+### System
+Monitoring endpoints:
+- `GET /health` – Basic health check.
+- `GET /metrics` – Monitoring metrics (e.g., for Prometheus).
 
-### Docker Build
-
-```bash
-docker build -t auth-service .
-```
-
-## Production Considerations
-
-1. **Security**:
-   - Change default passwords and secrets
-   - Use HTTPS in production
-   - Implement proper CORS policies
-   - Add rate limiting
-
-2. **Database**:
-   - Use PostgreSQL instead of H2 for Keycloak
-   - Implement database migrations
-   - Add connection pooling
-
-3. **Monitoring**:
-   - Add metrics collection (Prometheus)
-   - Implement health checks
-   - Add distributed tracing
-
-4. **Scaling**:
-   - Use Redis for session storage
-   - Implement load balancing
-   - Add horizontal pod autoscaling
-
-## License
-
-MIT License
+These endpoints provide core functionality for authentication and user management, while also supporting monitoring and integration of the microservice within the ShopMindAI architecture.
