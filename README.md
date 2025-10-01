@@ -38,3 +38,8 @@ The project is a microservices-based application with a React frontend and Go ba
 5. Frontend now connects to microservices via Kong gateway.
 
 For testing, ensure all containers are running and check logs for connections.
+
+## Dev Tooling & Environment
+
+- Follow `docs/dev-tooling.md` for the ordered startup flow (mock → Vite → auth/Keycloak → Kong), the pre-flight health checklist, and the three near-term workstreams.
+- Shared environment defaults now live under `env/shared/.env.example`; copy the per-service examples in `env/*/.env.example` to create your local overrides before starting Docker stacks.

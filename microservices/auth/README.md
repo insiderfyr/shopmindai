@@ -6,11 +6,18 @@ Go-based authentication microservice that fronts Keycloak. The service ships wit
 
 ### With Docker Compose
 ```bash
-# from microservices/auth
-cp .env.example .env    # if you keep secrets locally (optional)
+# from repo root
+cp env/shared/.env.example env/shared/.env
+cp env/auth/.env.example env/auth/.env
+
+# make the auth service see its env (copy or symlink)
+ln -sf ../../env/auth/.env microservices/auth/.env
+
+cd microservices/auth
 docker compose up -d --build
 ```
-The stack publishes the auth API on `http://localhost:8088`.
+The stack publishes the auth API on `http://localhost:8088`. Update the values in
+`env/auth/.env` if you need a different port, credentials, or external URLs.
 
 ### Local Go Run
 ```bash
