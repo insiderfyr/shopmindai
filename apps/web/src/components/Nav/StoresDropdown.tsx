@@ -51,7 +51,7 @@ export default function StoresDropdown({ className, onStoreChange }: StoresDropd
   );
 
   const triggerClasses = cn(
-    'inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 text-text-primary hover:text-accent-foreground rounded-md border border-border-light bg-surface-secondary p-2 hover:bg-surface-hover',
+    'inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 text-text-primary hover:text-accent-foreground rounded-xl border border-border-light bg-surface-secondary p-2 hover:bg-surface-hover',
     'px-3',
     'dark:border-white/20 dark:bg-surface-secondary dark:text-white dark:hover:bg-surface-hover',
   );
@@ -65,7 +65,7 @@ export default function StoresDropdown({ className, onStoreChange }: StoresDropd
       options={options}
       className={containerClasses}
       triggerClassName={triggerClasses}
-      popoverClassName="bg-white/95 dark:bg-slate-900 border border-border-light dark:border-white/10 rounded-md shadow-lg"
+      popoverClassName="bg-white/95 dark:bg-slate-900 border border-border-light dark:border-white/10 rounded-xl shadow-lg"
       ariaLabel={localize('com_ui_select_store') || 'Select store'}
       testId="stores-dropdown"
       renderValue={(option) => (

@@ -237,7 +237,7 @@ const ChatForm = memo(({ index = 0 }: { index?: number }) => {
           <div
             onClick={handleContainerClick}
             className={cn(
-              'relative mt-1 flex w-full max-w-3xl flex-grow flex-col overflow-hidden rounded-t-[1.5rem] border-[1.5px] pb-1 text-text-primary transition-all duration-200 sm:rounded-[1.75rem] sm:pb-1 shadow-[0_10px_20px_-5px_rgba(0,0,0,0.09),0_-10px_20px_-5px_rgba(0,0,0,0.09)]',
+              'relative -mt-7 flex w-full max-w-3xl flex-grow flex-col overflow-hidden rounded-t-[1.5rem] border-[1.5px] py-2 text-text-primary transition-all duration-200 sm:rounded-[1.75rem] sm:py-2 shadow-[0_10px_20px_-5px_rgba(0,0,0,0.09),0_-10px_20px_-5px_rgba(0,0,0,0.09)]',
               'mx-auto',
               // Elevated, layered shadows above and below for better separation from background
               'dark:shadow-[0_22px_50px_-24px_rgba(2,6,23,0.7),0_-14px_32px_-24px_rgba(2,6,23,0.45),inset_0_1px_4px_rgba(59,130,246,0.08)]',
@@ -287,7 +287,7 @@ const ChatForm = memo(({ index = 0 }: { index?: number }) => {
                     'placeholder:duration-800 placeholder:ease-[cubic-bezier(0.4,0,0.2,1)] placeholder:transition-all',
                     'dynamic-placeholder dynamic-placeholder-transition',
                     // Responsive textarea styling - reduced height
-                    'max-h-[88px] min-h-[36px] w-full text-base sm:max-h-[120px] mt-2',
+                    'max-h-[88px] min-h-[36px] w-full text-base sm:max-h-[120px] mt-0 mb-0',
                   )}
                 />
                 <div className="flex flex-col items-start justify-start pt-1.5">
@@ -302,7 +302,7 @@ const ChatForm = memo(({ index = 0 }: { index?: number }) => {
             {/* BadgeRow rămâne în poziția actuală */}
             <div
               className={cn(
-                'items-between flex gap-2 bg-transparent pb-1.5',
+                'items-between flex gap-2 bg-transparent mb-3',
                 isRTL ? 'flex-row-reverse' : 'flex-row',
               )}
             >
@@ -318,10 +318,12 @@ const ChatForm = memo(({ index = 0 }: { index?: number }) => {
             </div>
 
             {/* Butoanele mutate mai jos */}
-            <div className={cn(
-              'flex items-center justify-between mt-2 px-1',
-              isRTL ? 'flex-row-reverse' : 'flex-row'
-            )}>
+            <div
+              className={cn(
+                'flex items-center justify-between -mt-3 px-1 -mb-[4px]',
+                isRTL ? 'flex-row-reverse' : 'flex-row',
+              )}
+            >
               <div className={`${isRTL ? 'mr-1' : 'ml-1'} flex items-center gap-1.5 sm:gap-2`}>
                 <AttachFileChat disableInputs={disableInputs} />
 
@@ -333,10 +335,10 @@ const ChatForm = memo(({ index = 0 }: { index?: number }) => {
               <div className={`${isRTL ? 'ml-1.5' : 'mr-1.5'}`}>
                 {(isSubmitting || isSubmittingAdded) && (showStopButton || showStopAdded) ? (
                   <StopButton
-  stop={handleStopGenerating}
-  setShowStopButton={setShowStopButton}
-  setShowStopAdded={setShowStopAdded}
-/>
+                    stop={handleStopGenerating}
+                    setShowStopButton={setShowStopButton}
+                    setShowStopAdded={setShowStopAdded}
+                  />
                 ) : (
                   endpoint && (
                     <SendButton

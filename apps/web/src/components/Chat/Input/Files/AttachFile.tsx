@@ -22,7 +22,7 @@ const AttachFile = ({ disabled }: { disabled?: boolean | null }) => {
             aria-label={localize('com_sidepanel_attach_files')}
             disabled={isUploadDisabled}
             className={cn(
-              'flex h-12 w-12 items-center justify-center rounded-full p-2 transition-colors hover:bg-gray-200 active:bg-gray-200 focus:outline-none dark:hover:bg-gray-600 dark:active:bg-gray-600',
+              'flex h-10 w-10 items-center justify-center rounded-full p-1.5 transition-colors hover:bg-gray-200/80 active:bg-gray-200/80 focus:outline-none dark:hover:bg-gray-600/70 dark:active:bg-gray-600/70',
             )}
             onKeyDownCapture={(e) => {
               if (!inputRef.current) {

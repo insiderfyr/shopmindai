@@ -54,7 +54,7 @@ const AttachFileMenu = ({ disabled, conversationId, endpointFileConfig }: Attach
           id="attach-file-menu-button"
           aria-label="Attach File Options"
           className={cn(
-            'flex h-12 w-12 items-center justify-center rounded-full p-2 transition-colors hover:bg-gray-200 active:bg-gray-200 focus:outline-none dark:hover:bg-gray-600 dark:active:bg-gray-600',
+            'flex h-10 w-10 items-center justify-center rounded-full p-1.5 transition-colors hover:bg-gray-200/80 active:bg-gray-200/80 focus:outline-none dark:hover:bg-gray-600/70 dark:active:bg-gray-600/70',
           )}
         >
           <div className="flex w-full items-center justify-center gap-2">
