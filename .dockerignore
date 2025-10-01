@@ -1,17 +1,38 @@
-**/.circleci
-**/.editorconfig
-**/.dockerignore
+# General
 **/.git
-**/.DS_Store
 **/.vscode
+**/.idea
+**/.DS_Store
+**/.env
 **/node_modules
+**/.dockerignore
+docker-compose.yml
+Dockerfile*
+.devcontainer
 
-# Specific patterns to ignore
+# Build artifacts
+**/dist
+**/build
+**/coverage
+**/target
+
+# Go specific
+**/.gocache
+**/.cache-go
+**/.cache
+**/vendor
+services-new/auth/auth-service
+services-new/auth/main
+
+# Logs
+*.log
+*.log*
+
+# Temp files
+unused-*.txt
+
+# Other
 data-node
 meili_data*
 librechat*
-Dockerfile*
 docs
-
-# Ignore all hidden files
-.*
