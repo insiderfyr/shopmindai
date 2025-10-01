@@ -1,4 +1,0 @@
-./auth.go
-./frontend.go
-./user.go
-./auth_test.go
