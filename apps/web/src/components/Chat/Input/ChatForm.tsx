@@ -156,11 +156,20 @@ const ChatForm = memo(({ index = 0 }: { index?: number }) => {
   const textValue = useWatch({ control: methods.control, name: 'text' });
 
   useEffect(() => {
-    if (textAreaRef.current) {
-      const style = window.getComputedStyle(textAreaRef.current);
-      const lineHeight = parseFloat(style.lineHeight);
-      setVisualRowCount(Math.floor(textAreaRef.current.scrollHeight / lineHeight));
+    const textArea = textAreaRef.current;
+    if (!textArea) {
+      return;
     }
+
+    const style = window.getComputedStyle(textArea);
+    const parsedLineHeight = Number.parseFloat(style.lineHeight);
+    const parsedFontSize = Number.parseFloat(style.fontSize);
+    const effectiveLineHeight = Number.isFinite(parsedLineHeight) && parsedLineHeight > 0
+      ? parsedLineHeight
+      : (Number.isFinite(parsedFontSize) && parsedFontSize > 0 ? parsedFontSize : 20);
+
+    const rows = Math.max(1, Math.round(textArea.scrollHeight / effectiveLineHeight));
+    setVisualRowCount(rows);
   }, [textValue]);
 
   useEffect(() => {
@@ -302,7 +311,7 @@ const ChatForm = memo(({ index = 0 }: { index?: number }) => {
             {/* BadgeRow rămâne în poziția actuală */}
             <div
               className={cn(
-                'items-between flex gap-2 bg-transparent mb-3',
+                'mb-3 flex items-center gap-2 bg-transparent',
                 isRTL ? 'flex-row-reverse' : 'flex-row',
               )}
             >

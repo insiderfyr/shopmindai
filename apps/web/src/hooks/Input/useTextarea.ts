@@ -17,6 +17,19 @@ import store from '~/store';
 
 type KeyEvent = KeyboardEvent<HTMLTextAreaElement>;
 
+const ECOMMERCE_MESSAGES = [
+  'What are you looking for today?',
+  'Describe your perfect product',
+  'I can help you find anything',
+  'Tell me your shopping needs',
+  "What's your style preference?",
+  'Looking for gifts or personal items?',
+  "I'll find the best deals for you",
+  "What's your budget range?",
+  "Let me discover products you'll love",
+  "I'm your personal shopping assistant",
+] as const;
+
 export default function useTextarea({
   textAreaRef,
   submitButtonRef,
@@ -54,25 +67,13 @@ export default function useTextarea({
 
   // Placeholder-uri dinamice pentru e-commerce
   const [currentMessageIndex, setCurrentMessageIndex] = useState(0);
-  const ecommerceMessages = [
-    'What are you looking for today?',
-    'Describe your perfect product',
-    'I can help you find anything',
-    'Tell me your shopping needs',
-    "What's your style preference?",
-    'Looking for gifts or personal items?',
-    "I'll find the best deals for you",
-    "What's your budget range?",
-    "Let me discover products you'll love",
-    "I'm your personal shopping assistant",
-  ];
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setCurrentMessageIndex((prevIndex) => (prevIndex + 1) % ecommerceMessages.length);
+      setCurrentMessageIndex((prevIndex) => (prevIndex + 1) % ECOMMERCE_MESSAGES.length);
     }, 15000);
     return () => clearInterval(interval);
-  }, [ecommerceMessages.length]);
+  }, []);
 
   // Actualizare placeholder
   useEffect(() => {
@@ -82,7 +83,7 @@ export default function useTextarea({
     const getPlaceholderText = () => {
       if (disabled) return localize('com_endpoint_config_placeholder');
       if (isNotAppendable) return localize('com_endpoint_message_not_appendable');
-      return ecommerceMessages[currentMessageIndex];
+      return ECOMMERCE_MESSAGES[currentMessageIndex];
     };
 
     const placeholder = getPlaceholderText();
@@ -100,7 +101,7 @@ export default function useTextarea({
     debouncedSetPlaceholder();
 
     return () => debouncedSetPlaceholder.cancel();
-  }, [localize, disabled, textAreaRef, latestMessage, isNotAppendable, currentMessageIndex, ecommerceMessages]);
+  }, [localize, disabled, textAreaRef, latestMessage, isNotAppendable, currentMessageIndex]);
 
   // Key handlers
   const handleKeyDown = useCallback(
