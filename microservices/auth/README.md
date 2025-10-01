@@ -1,122 +1,92 @@
-# Auth Service with Keycloak - ShopMindAI
+# Auth Service (ShopMindAI)
 
-This is an authentication microservice project built with Go, which uses Keycloak as an Identity Provider. The project runs in a Docker containerized environment using Docker Compose, along with PostgreSQL for storing authentication data and Redis for caching and sessions.
+Go-based authentication microservice that fronts Keycloak. The service ships with a Docker Compose stack (Postgres + Redis + Keycloak + auth) and exposes JSON APIs for registration, login, profile management, and basic frontend bootstrapping.
 
----
+## Quickstart
 
-## Project Structure
-
-```
-.
-├── auth-service
-├── cmd
-│   └── main.go
-├── docker-compose.yml
-├── Dockerfile
-├── execute.sh
-├── go.mod
-├── go.sum
-├── internal
-│   ├── config
-│   │   └── config.go
-│   ├── handlers
-│   │   ├── auth_test.go
-│   │   ├── auth.go
-│   │   ├── frontend.go
-│   │   └── user.go
-│   ├── middleware
-│   │   └── auth_middleware.go
-│   ├── models
-│   │   └── auth.go
-│   └── services
-│       └── keycloak.go
-├── keycloak
-│   └── Dockerfile
-├── keycloak-23.0.7
-│   └── version.txt
-├── main
-├── Makefile
-├── pkg
-│   └── logger
-│       └── logger.go
-├── README.md
-├── shopmindai-realm.json
-└── test
-    └── integration_test.go
-```
-
----
-
-## Running the Service
-
-### Run with Docker
+### With Docker Compose
 ```bash
-docker-compose up --build
+# from microservices/auth
+cp .env.example .env    # if you keep secrets locally (optional)
+docker compose up -d --build
 ```
+The stack publishes the auth API on `http://localhost:8088`.
 
-### Run Locally
+### Local Go Run
 ```bash
-go run cmd/main.go
+go run ./cmd/main.go
 ```
+The server listens on the configured `SERVER_ADDRESS` (defaults to `:8080`).
 
----
+## Key Components
+
+- `cmd/main.go` – Gin HTTP server bootstrap, routing, graceful shutdown, health probe (`./auth-service --health-check`).
+- `internal/config` – Viper-based config loader for `.env` + environment overrides.
+- `internal/handlers` – Gin handlers for auth, user profile, and frontend helper endpoints.
+- `internal/services` – Keycloak client wrapper using `gocloak`.
+- `internal/middleware` – JWT validation, rate limiting, logging, and basic input checks.
+- `docker-compose.yml` – Auth + Keycloak + Postgres + Redis stack (auth exposed on port 8088).
 
 ## Environment Variables
 
-### Database
-- `POSTGRES_PASSWORD`
+All keys are read via Viper; set them in `.env` or the shell.
 
-### Redis
-- `REDIS_PASSWORD`
+| Group      | Keys (examples) |
+|------------|-----------------|
+| Server     | `SERVER_ADDRESS`, `SERVER_MODE` |
+| Keycloak   | `KEYCLOAK_URL`, `KEYCLOAK_REALM`, `KEYCLOAK_CLIENT_ID`, `KEYCLOAK_CLIENT_SECRET`, `KEYCLOAK_ADMIN_USER`, `KEYCLOAK_ADMIN_PASS` |
+| Database   | `POSTGRES_PASSWORD`, `DB_HOST`, `DB_USER`, `DB_PASSWORD`, `DB_NAME` |
+| Redis      | `REDIS_PASSWORD`, `REDIS_HOST`, `REDIS_PORT` |
+| JWT / Misc | `JWT_SECRET_KEY`, `LOG_LEVEL` |
 
-### Keycloak
-- `KEYCLOAK_ADMIN`
-- `KEYCLOAK_ADMIN_PASSWORD`
-- `KEYCLOAK_CLIENT_ID`
-- `KEYCLOAK_CLIENT_SECRET`
+Defaults are provided in `internal/config/config.go` for local development.
 
-### Internal Mappings (Optional)
-These are also used for Keycloak and the database.
-- `KEYCLOAK_ADMIN_USER=${KEYCLOAK_ADMIN}`
-- `KEYCLOAK_ADMIN_PASS=${KEYCLOAK_ADMIN_PASSWORD}`
-- `KC_DB_PASSWORD=${POSTGRES_PASSWORD}`
-- `DB_PASSWORD=${POSTGRES_PASSWORD}`
+## API Surface
 
-### Logging (from code)
-- `LOG_LEVEL=debug`
+Base path: `http://localhost:8088` (use `/api/v1/...` for versioned routes).
 
----
+### Auth (public)
+- `POST /api/v1/auth/login`
+- `POST /api/v1/auth/register`
+- `POST /api/v1/auth/refresh`
+- `POST /api/v1/auth/logout`
 
-## API Endpoints
+### User (JWT required)
+- `GET /api/v1/user/profile`
+- `PUT /api/v1/user/profile`
+- `POST /api/v1/user/change-password`
 
-This microservice exposes a set of REST API endpoints using the **Gin** framework, organized into functional groups:
+### Frontend bootstrap helpers
+- `GET /api/auth/config`
+- `GET /api/app/info`
+- `GET /api/health/detailed`
+- `GET /api/endpoints`
+- `GET /api/startup`
+- `GET /api/banner`
+- `GET /api/config`
 
-### Authentication (`/api/auth`)
-Handles login and security flows:
-- `POST /login` – Authenticate a user and return a JWT token.
-- `POST /register` – Create a new user account.
-- `POST /refresh` – Refresh the access token.
-- `POST /logout` – Invalidate the current session.
-- `GET /config` – Retrieve Keycloak client configuration.
+### Health & Metrics
+- `GET /health`
+- `GET /metrics`
 
-### User Profile (`/api/auth`)
-Provides access and update capabilities for user data:
-- `GET /profile` – Fetch the current user profile.
-- `PUT /profile` – Update user profile information.
-- `POST /change-password` – Change the user password.
+## Health Check from Docker
+The container uses the binary’s built-in probe:
+```bash
+docker compose exec auth-service ./auth-service --health-check
+```
+Exit code `0` indicates success.
 
-### General API (`/api`)
-Endpoints for application information and status:
-- `GET /banner` – Retrieve banner information.
-- `GET /config` – Retrieve application configuration.
-- `GET /app/info` – Fetch application details.
-- `GET /health/detailed` – Perform a detailed health check.
-- `GET /endpoints` – List all exposed endpoints.
-- `GET /startup` – Check service startup status.
+## Testing
+```bash
+go test ./...
+```
+(Some environments may need write access to `$GOCACHE`; run locally if sandboxed.)
 
-### System
-Monitoring endpoints:
-- `GET /health` – Basic health check.
-- `GET /metrics` – Monitoring metrics (e.g., for Prometheus).
+## Useful Ports
 
-These endpoints provide core functionality for authentication and user management, while also supporting monitoring and integration of the microservice within the ShopMindAI architecture.
+| Service   | Host Port |
+|-----------|-----------|
+| Auth API  | 8088      |
+| Keycloak  | 8081      |
+| Postgres  | 5432      |
+| Redis     | 6379      |

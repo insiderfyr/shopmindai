@@ -1,33 +1,54 @@
 # Gateway Deployment
 
-This directory provides the Kong declarative gateway configuration for ShopMindAI. It assumes the auth stack is already running and has created the shared Docker network named `auth_shopmind-network`.
+Kong is used as the lightweight API gateway for local development. The configuration is declarative (DB-less) and lives entirely in this directory.
 
 ## Prerequisites
 
-- Docker and the Compose plugin installed locally
-- The auth compose stack running (`docker compose up -d` from `microservices/auth`) so that the shared network and upstream services are available
+- Docker + Compose plugin installed
+- The auth stack running (`cd ../../auth && docker compose up -d`) so the external network `auth_shopmind-network` exists and the upstream service `shopmind-auth-service` is reachable
 
-## Usage
+## How to Run
 
-1. Build the Kong image (optional when configuration changes only):
-   ```bash
-   docker compose build
-   ```
-2. Start the gateway:
-   ```bash
-   docker compose up -d
-   ```
-3. Validate the proxy is routing to the auth service:
-   ```bash
-   docker run --rm --network auth_shopmind-network curlimages/curl:8.10.1 -i http://kong-gateway:8000/health
-   ```
+```bash
+# build only when the image must be refreshed
+docker compose build
 
-## Configuration
+# start Kong in detached mode
+docker compose up -d
+```
 
-- `docker-compose.yml` runs Kong in DB-less mode and mounts `kong.yaml` as the declarative configuration.
-- `kong.yaml` defines routes for auth API calls (`/api/v1/auth`), health endpoints (`/health`, `/metrics`), and exposes CORS plus basic rate limiting for public traffic.
+Kong publishes:
 
-To update the gateway, modify `kong.yaml` and restart Kong:
+| Port | Purpose |
+|------|---------|
+| 8000 | HTTP proxy |
+| 8443 | HTTPS proxy |
+| 8001 | Admin API |
+| 8444 | Admin API (HTTPS) |
+
+## Verifying the Proxy
+
+```bash
+# from anywhere on the host
+curl -i http://localhost:8000/health
+
+# from inside the Docker network
+docker run --rm --network auth_shopmind-network curlimages/curl:8.10.1 -i http://kong-gateway:8000/health
+```
+
+Both commands should return the auth service health JSON.
+
+## Configuration Notes
+
+- `docker-compose.yml` starts a single Kong container in DB-less mode; the `version` key is ignored by modern Compose but retained for compatibility.
+- `kong.yaml` currently exposes two routes:
+  - `/api/v1/auth` → `shopmind-auth-service:8080` (all auth APIs)
+  - `/health` and `/metrics` → `shopmind-auth-service:8080` (GET only)
+- Global plugins enabled:
+  - `cors` for local SPAs (`http://localhost:3000`, `http://localhost:3080`)
+  - `rate-limiting` with a local in-memory policy (600 requests/minute)
+
+Update `kong.yaml` to add more upstream services, then reload Kong:
 ```bash
 docker compose restart
 ```
