@@ -13,8 +13,29 @@ export default defineConfig(({ command }) => ({
     port: 3090,
     strictPort: true,
     proxy: {
-      '/api': {
+      '/api/v1': {
         target: 'http://localhost:8088',
+        changeOrigin: true,
+        secure: false,
+        ws: true,
+      },
+      '/api/auth': {
+        target: 'http://localhost:8088',
+        changeOrigin: true,
+        secure: false,
+      },
+      '/health': {
+        target: 'http://localhost:8088',
+        changeOrigin: true,
+        secure: false,
+      },
+      '/metrics': {
+        target: 'http://localhost:8088',
+        changeOrigin: true,
+        secure: false,
+      },
+      '/api': {
+        target: 'http://localhost:3080',
         changeOrigin: true,
         secure: false,
         ws: true,

@@ -1,11 +1,55 @@
 _format_version: "3.0"
-_comment: "Minimal Kong declarative configuration"
+_comment: "Kong declarative configuration for ShopMindAI"
 
 services:
-  - name: example-service
-    url: http://httpbin.org/anything
+  - name: auth-service
+    url: http://shopmind-auth-service:8080
     routes:
-      - name: example-route
+      - name: auth-api-route
         paths:
-          - /example
+          - /api/v1/auth
+        methods:
+          - GET
+          - POST
+          - PUT
+          - DELETE
+          - OPTIONS
+        strip_path: false
+      - name: auth-health-route
+        paths:
+          - /health
+          - /metrics
+        methods:
+          - GET
+        strip_path: false
+    plugins:
+      - name: cors
+        config:
+          origins:
+            - http://localhost:3000
+            - http://localhost:3080
+          methods:
+            - GET
+            - POST
+            - PUT
+            - DELETE
+            - OPTIONS
+          headers:
+            - Authorization
+            - Content-Type
+          exposed_headers:
+            - Authorization
+          credentials: true
+          max_age: 3600
+      - name: rate-limiting
+        config:
+          minute: 600
+          policy: local
+
+  - name: keycloak-service
+    url: http://shopmind-keycloak:8080
+    routes:
+      - name: keycloak-route
+        paths:
+          - /keycloak
         strip_path: true

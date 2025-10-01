@@ -16,6 +16,10 @@ import (
 )
 
 func main() {
+	if len(os.Args) > 1 && os.Args[1] == "--health-check" {
+		os.Exit(runHealthCheck())
+	}
+
 	// Initialize logger
 	logger := logger.NewLogger()
 
@@ -74,7 +78,7 @@ func main() {
 		c.JSON(200, gin.H{
 			"message": "Banner endpoint - placeholder for ShopMindAI",
 			"data": gin.H{
-				"banner_text": "Welcome to ShopMindAI",
+				"banner_text":  "Welcome to ShopMindAI",
 				"banner_image": "/assets/banner-placeholder.jpg",
 			},
 		})
@@ -84,17 +88,17 @@ func main() {
 		c.JSON(200, gin.H{
 			"message": "Config endpoint - placeholder for ShopMindAI",
 			"data": gin.H{
-				"app_name": "ShopMindAI",
-				"version": "1.0.0-mvp",
-				"features": []string{"auth", "ai", "shopping"},
-				"emailEnabled": false,
+				"app_name":            "ShopMindAI",
+				"version":             "1.0.0-mvp",
+				"features":            []string{"auth", "ai", "shopping"},
+				"emailEnabled":        false,
 				"registrationEnabled": true,
 				"socialLogins": gin.H{
-					"google": false,
+					"google":   false,
 					"facebook": false,
-					"discord": false,
-					"github": false,
-					"openid": true,
+					"discord":  false,
+					"github":   false,
+					"openid":   true,
 				},
 				"turnstile": gin.H{
 					"siteKey": "",
@@ -118,9 +122,9 @@ func main() {
 		c.JSON(200, gin.H{
 			"message": "Metrics endpoint - placeholder for ShopMindAI",
 			"data": gin.H{
-				"uptime": "running",
+				"uptime":   "running",
 				"requests": 0,
-				"errors": 0,
+				"errors":   0,
 			},
 		})
 	})
@@ -135,17 +139,17 @@ func main() {
 		c.JSON(200, gin.H{
 			"message": "AI Endpoints - placeholder for ShopMindAI",
 			"data": gin.H{
-				"xAI": nil,
-				"openAI": nil,
-				"azureOpenAI": nil,
+				"xAI":             nil,
+				"openAI":          nil,
+				"azureOpenAI":     nil,
 				"azureAssistants": nil,
-				"assistants": nil,
-				"agents": nil,
-				"chatGPTBrowser": nil,
-				"gptPlugins": nil,
-				"google": nil,
-				"anthropic": nil,
-				"custom": nil,
+				"assistants":      nil,
+				"agents":          nil,
+				"chatGPTBrowser":  nil,
+				"gptPlugins":      nil,
+				"google":          nil,
+				"anthropic":       nil,
+				"custom":          nil,
 			},
 		})
 	})
@@ -155,16 +159,16 @@ func main() {
 		c.JSON(200, gin.H{
 			"message": "Startup config - placeholder for ShopMindAI",
 			"data": gin.H{
-				"app_name": "ShopMindAI",
-				"version": "1.0.0-mvp",
-				"emailEnabled": false,
+				"app_name":            "ShopMindAI",
+				"version":             "1.0.0-mvp",
+				"emailEnabled":        false,
 				"registrationEnabled": true,
 				"socialLogins": gin.H{
-					"google": false,
+					"google":   false,
 					"facebook": false,
-					"discord": false,
-					"github": false,
-					"openid": true,
+					"discord":  false,
+					"github":   false,
+					"openid":   true,
 				},
 				"turnstile": gin.H{
 					"siteKey": "",
@@ -205,4 +209,17 @@ func main() {
 	}
 
 	logger.Info("Auth service stopped gracefully")
+}
+
+func runHealthCheck() int {
+	client := &http.Client{Timeout: 2 * time.Second}
+	resp, err := client.Get("http://localhost:8080/health")
+	if err != nil {
+		return 1
+	}
+	defer resp.Body.Close()
+	if resp.StatusCode != http.StatusOK {
+		return 1
+	}
+	return 0
 }

@@ -1,68 +1,31 @@
 version: '3.8'
 
 services:
-  kong-database:
-    image: postgres:13
-    container_name: kong-database
-    restart: unless-stopped
-    environment:
-      POSTGRES_USER: ${POSTGRES_USER:-kong}
-      POSTGRES_DB: ${POSTGRES_DB:-kong}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-kongpass}
-    volumes:
-      - kong_db_data:/var/lib/postgresql/data
-    networks:
-      - kong-net
-
-  kong-migrations:
-    image: kong:3.6
-    container_name: kong-migrations
-    depends_on:
-      - kong-database
-    command: kong migrations bootstrap
-    environment:
-      KONG_DATABASE: postgres
-      KONG_PG_HOST: kong-database
-      KONG_PG_PASSWORD: ${POSTGRES_PASSWORD:-kongpass}
-      KONG_PG_USER: ${POSTGRES_USER:-kong}
-      KONG_PG_DATABASE: ${POSTGRES_DB:-kong}
-    networks:
-      - kong-net
-
   kong:
     image: kong:3.6
     container_name: kong-gateway
     restart: unless-stopped
     environment:
-      KONG_DATABASE: postgres
-      KONG_PG_HOST: kong-database
-      KONG_PG_PASSWORD: ${POSTGRES_PASSWORD:-kongpass}
-      KONG_PG_USER: ${POSTGRES_USER:-kong}
-      KONG_PG_DATABASE: ${POSTGRES_DB:-kong}
+      KONG_DATABASE: "off"
+      KONG_DECLARATIVE_CONFIG: /usr/local/kong/declarative/kong.yaml
+      KONG_LOG_LEVEL: notice
       KONG_ADMIN_LISTEN: 0.0.0.0:8001,0.0.0.0:8444 ssl
       KONG_PROXY_LISTEN: 0.0.0.0:8000,0.0.0.0:8443 ssl
-      KONG_LOG_LEVEL: notice
       KONG_ADMIN_ACCESS_LOG: /dev/stdout
       KONG_ADMIN_ERROR_LOG: /dev/stderr
       KONG_PROXY_ACCESS_LOG: /dev/stdout
       KONG_PROXY_ERROR_LOG: /dev/stderr
-      KONG_DECLARATIVE_CONFIG: /usr/local/kong/declarative/kong.yaml
     ports:
       - "8000:8000"
       - "8443:8443"
       - "8001:8001"
       - "8444:8444"
-    depends_on:
-      - kong-database
-      - kong-migrations
     volumes:
       - ./kong.yaml:/usr/local/kong/declarative/kong.yaml:ro
     networks:
-      - kong-net
-
-volumes:
-  kong_db_data:
+      - shopmind-network
 
 networks:
-  kong-net:
-    driver: bridge
+  shopmind-network:
+    external: true
+    name: auth_shopmind-network

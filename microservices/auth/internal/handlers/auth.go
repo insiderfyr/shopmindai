@@ -115,7 +115,7 @@ func (h *AuthHandler) Register(c *gin.Context) {
 	err := h.keycloakService.Register(&req)
 	if err != nil {
 		h.logger.WithError(err).WithField("username", req.Username).Error("Registration failed")
-		
+
 		// Check if user already exists
 		if isUserExistsError(err) {
 			c.JSON(http.StatusConflict, models.ErrorResponse{
@@ -130,6 +130,7 @@ func (h *AuthHandler) Register(c *gin.Context) {
 			Error:   "registration_failed",
 			Message: "Failed to create user account",
 			Code:    http.StatusBadRequest,
+			Details: err.Error(),
 		})
 		return
 	}
@@ -201,19 +202,22 @@ func (h *AuthHandler) Logout(c *gin.Context) {
 
 // Helper functions
 func sanitizeInput(input string) string {
-	// Basic XSS prevention - remove dangerous characters
-	input = strings.ReplaceAll(input, "<", "")
-	input = strings.ReplaceAll(input, ">", "")
-	input = strings.ReplaceAll(input, "\"", "")
-	input = strings.ReplaceAll(input, "'", "")
-	input = strings.ReplaceAll(input, "&", "")
-	return strings.TrimSpace(input)
+	// Basic XSS prevention - strip obvious script markers while keeping common name characters
+	replacer := strings.NewReplacer(
+		"<", "",
+		">", "",
+		"\"", "",
+		"`", "",
+	)
+	clean := replacer.Replace(input)
+	clean = strings.ReplaceAll(clean, "javascript:", "")
+	return strings.TrimSpace(clean)
 }
 
 func isUserExistsError(err error) bool {
 	// Check if error indicates user already exists
 	// This is specific to Keycloak error messages
 	return strings.Contains(strings.ToLower(err.Error()), "user exists") ||
-		   strings.Contains(strings.ToLower(err.Error()), "already exists") ||
-		   strings.Contains(strings.ToLower(err.Error()), "conflict")
+		strings.Contains(strings.ToLower(err.Error()), "already exists") ||
+		strings.Contains(strings.ToLower(err.Error()), "conflict")
 }

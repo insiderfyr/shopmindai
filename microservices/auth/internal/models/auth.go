@@ -44,7 +44,7 @@ func (r *RegisterRequest) Validate() []string {
 
 	// Password validation
 	if !isValidPassword(r.Password) {
-		errors = append(errors, "password must contain at least one uppercase letter, one lowercase letter, one number, and one special character")
+		errors = append(errors, "password must contain at least one uppercase letter, one lowercase letter, and one number")
 	}
 
 	// Name validation (no numbers or special chars)
@@ -164,10 +164,9 @@ func isValidUsername(username string) bool {
 
 func isValidPassword(password string) bool {
 	var (
-		hasUpper   = false
-		hasLower   = false
-		hasNumber  = false
-		hasSpecial = false
+		hasUpper  bool
+		hasLower  bool
+		hasNumber bool
 	)
 
 	for _, char := range password {
@@ -178,12 +177,10 @@ func isValidPassword(password string) bool {
 			hasLower = true
 		case unicode.IsDigit(char):
 			hasNumber = true
-		case unicode.IsPunct(char) || unicode.IsSymbol(char):
-			hasSpecial = true
 		}
 	}
 
-	return hasUpper && hasLower && hasNumber && hasSpecial
+	return hasUpper && hasLower && hasNumber
 }
 
 func isValidName(name string) bool {

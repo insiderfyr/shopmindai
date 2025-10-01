@@ -65,17 +65,17 @@ func (m *MockKeycloakService) ChangePassword(accessToken, currentPassword, newPa
 
 func TestAuthHandler_Login(t *testing.T) {
 	gin.SetMode(gin.TestMode)
-	
+
 	// Create mock service
 	mockService := new(MockKeycloakService)
 	logger := logrus.New()
-	
+
 	// Create handler with mock service
 	handler := &AuthHandler{
 		keycloakService: mockService,
 		logger:          logger,
 	}
-	
+
 	// Test cases
 	tests := []struct {
 		name           string
@@ -88,10 +88,10 @@ func TestAuthHandler_Login(t *testing.T) {
 			name: "successful login",
 			requestBody: models.LoginRequest{
 				Username: "testuser",
-				Password: "password123",
+				Password: "Password123",
 			},
 			mockSetup: func() {
-				mockService.On("Login", "testuser", "password123").Return(
+				mockService.On("Login", "testuser", "Password123").Return(
 					&models.AuthResponse{
 						AccessToken:  "access-token",
 						RefreshToken: "refresh-token",
@@ -124,37 +124,37 @@ func TestAuthHandler_Login(t *testing.T) {
 			expectedError:  "authentication_failed",
 		},
 	}
-	
+
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			// Setup mock
 			tt.mockSetup()
-			
+
 			// Create request
 			jsonBody, _ := json.Marshal(tt.requestBody)
 			req, _ := http.NewRequest("POST", "/auth/login", bytes.NewBuffer(jsonBody))
 			req.Header.Set("Content-Type", "application/json")
-			
+
 			// Create response recorder
 			w := httptest.NewRecorder()
-			
+
 			// Create Gin context
 			c, _ := gin.CreateTestContext(w)
 			c.Request = req
-			
+
 			// Call handler
 			handler.Login(c)
-			
+
 			// Assertions
 			assert.Equal(t, tt.expectedStatus, w.Code)
-			
+
 			if tt.expectedError != "" {
 				var response models.ErrorResponse
 				err := json.Unmarshal(w.Body.Bytes(), &response)
 				assert.NoError(t, err)
 				assert.Equal(t, tt.expectedError, response.Error)
 			}
-			
+
 			// Verify mock expectations
 			mockService.AssertExpectations(t)
 		})
@@ -163,17 +163,17 @@ func TestAuthHandler_Login(t *testing.T) {
 
 func TestAuthHandler_Register(t *testing.T) {
 	gin.SetMode(gin.TestMode)
-	
+
 	// Create mock service
 	mockService := new(MockKeycloakService)
 	logger := logrus.New()
-	
+
 	// Create handler with mock service
 	handler := &AuthHandler{
 		keycloakService: mockService,
 		logger:          logger,
 	}
-	
+
 	// Test successful registration
 	requestBody := models.RegisterRequest{
 		Username:  "newuser",
@@ -182,33 +182,33 @@ func TestAuthHandler_Register(t *testing.T) {
 		FirstName: "John",
 		LastName:  "Doe",
 	}
-	
+
 	// Setup mock
 	mockService.On("Register", mock.AnythingOfType("*models.RegisterRequest")).Return(nil).Once()
-	
+
 	// Create request
 	jsonBody, _ := json.Marshal(requestBody)
 	req, _ := http.NewRequest("POST", "/auth/register", bytes.NewBuffer(jsonBody))
 	req.Header.Set("Content-Type", "application/json")
-	
+
 	// Create response recorder
 	w := httptest.NewRecorder()
-	
+
 	// Create Gin context
 	c, _ := gin.CreateTestContext(w)
 	c.Request = req
-	
+
 	// Call handler
 	handler.Register(c)
-	
+
 	// Assertions
 	assert.Equal(t, http.StatusCreated, w.Code)
-	
+
 	var response models.SuccessResponse
 	err := json.Unmarshal(w.Body.Bytes(), &response)
 	assert.NoError(t, err)
 	assert.Equal(t, "Registration successful", response.Message)
-	
+
 	// Verify mock expectations
 	mockService.AssertExpectations(t)
 }
