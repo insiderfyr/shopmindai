@@ -34,7 +34,7 @@ services:
     extra_hosts:
       - 'host.docker.internal:host-gateway'
     volumes:
-      - ./infra/gateway/kong.yaml:/etc/kong/kong.yaml:ro
+      - ./microservices/infra/gateway/kong.yaml:/etc/kong/kong.yaml:ro
     healthcheck:
       test: ['CMD', 'kong', 'health']
       interval: 10s

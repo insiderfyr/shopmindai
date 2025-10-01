@@ -31,7 +31,7 @@ The project is a microservices-based application with a React frontend and Go ba
 - Updated Vite proxy to point to Kong (localhost:8088) for all API calls.
 
 ## How to Run and Connect
-1. **Start Gateway**: `cd infra/gateway && docker-compose up -d`
+1. **Start Gateway**: `cd microservices/infra/gateway && docker-compose up -d`
 2. **Start Services**: `docker-compose up -d` in root, and in services-new/auth if separate.
 3. **Start Frontend**: `cd apps/web && npm install && npm run dev`
 4. Access at http://localhost:3090, login using Keycloak or password.
