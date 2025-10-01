@@ -68,18 +68,72 @@ app.get('/api/config', (req, res) => {
 });
 
 
-app.get('/api/endpoints', (req, res) => {
+app.get('/api/endpoints', (_req, res) => {
   res.json({
-    azureOpenAI: false,
-    openAI: true,
-    google: false,
-    anthropic: false,
-    custom: true,
-    assistants: true,
-    azureAssistants: false,
-    chatGPTBrowser: false,
-    gptPlugins: false,
-    xAI: false
+    openAI: {
+      order: 0,
+      type: 'openAI',
+      userProvide: false,
+      modelDisplayLabel: 'OpenAI',
+    },
+    assistants: {
+      order: 1,
+      type: 'assistants',
+      userProvide: false,
+      modelDisplayLabel: 'Assistants',
+    },
+    agents: {
+      order: 2,
+      type: 'agents',
+      userProvide: false,
+      modelDisplayLabel: 'Agents',
+    },
+    custom: {
+      order: 3,
+      type: 'custom',
+      userProvide: false,
+      modelDisplayLabel: 'Custom',
+    },
+  });
+});
+
+app.get('/api/models', (_req, res) => {
+  res.json({
+    openAI: ['gpt-4o-mini', 'gpt-4o', 'gpt-3.5-turbo'],
+    assistants: ['gpt-4o-mini'],
+    agents: ['gpt-3.5-turbo'],
+    custom: ['mock-model'],
+  });
+});
+
+app.get('/api/assistants/v2', (_req, res) => {
+  res.json({
+    items: [
+      {
+        id: 'mock-assistant-1',
+        name: 'Shopping Assistant',
+        description: 'Helps you find products effortlessly.',
+        model: 'gpt-4o-mini',
+        endpoint: 'assistants',
+        updated_at: new Date().toISOString(),
+      },
+    ],
+    has_more: false,
+  });
+});
+
+app.get('/api/agents', (_req, res) => {
+  res.json({
+    items: [
+      {
+        agent_id: 'mock-agent-1',
+        name: 'Deal Hunter',
+        description: 'Searches for the best deals across stores.',
+        model: 'gpt-3.5-turbo',
+        updated_at: new Date().toISOString(),
+      },
+    ],
+    has_more: false,
   });
 });
 

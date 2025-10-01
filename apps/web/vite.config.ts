@@ -7,41 +7,109 @@ import { nodePolyfills } from 'vite-plugin-node-polyfills';
 import { VitePWA } from 'vite-plugin-pwa';
 
 // https://vitejs.dev/config/
-export default defineConfig(({ command }) => ({
-  server: {
-    host: 'localhost',
-    port: 3090,
-    strictPort: true,
-    proxy: {
-      '/api/v1': {
-        target: 'http://localhost:8088',
-        changeOrigin: true,
-        secure: false,
-        ws: true,
-      },
-      '/api/auth': {
-        target: 'http://localhost:8088',
-        changeOrigin: true,
-        secure: false,
-      },
-      '/health': {
-        target: 'http://localhost:8088',
-        changeOrigin: true,
-        secure: false,
-      },
-      '/metrics': {
-        target: 'http://localhost:8088',
-        changeOrigin: true,
-        secure: false,
-      },
-      '/api': {
-        target: 'http://localhost:3080',
-        changeOrigin: true,
-        secure: false,
-        ws: true,
+export default defineConfig(({ command }) => {
+  const gatewayTarget = process.env.VITE_GATEWAY_URL ?? 'http://localhost:8088';
+  const orchestratorTarget = process.env.VITE_ORCHESTRATOR_URL ?? 'http://localhost:8090';
+  const mockTarget = process.env.VITE_MOCK_URL ?? 'http://localhost:3080';
+
+  return {
+    server: {
+      host: 'localhost',
+      port: 3090,
+      strictPort: true,
+      proxy: {
+        '/api/v1/auth': {
+          target: gatewayTarget,
+          changeOrigin: true,
+          secure: false,
+          ws: true,
+        },
+        '/api/v1/user': {
+          target: gatewayTarget,
+          changeOrigin: true,
+          secure: false,
+        },
+        '/api/auth': {
+          target: gatewayTarget,
+          changeOrigin: true,
+          secure: false,
+        },
+        '/api/app': {
+          target: gatewayTarget,
+          changeOrigin: true,
+          secure: false,
+        },
+        '/api/startup': {
+          target: gatewayTarget,
+          changeOrigin: true,
+          secure: false,
+        },
+        '/api/config': {
+          target: gatewayTarget,
+          changeOrigin: true,
+          secure: false,
+        },
+        '/api/banner': {
+          target: gatewayTarget,
+          changeOrigin: true,
+          secure: false,
+        },
+        '/api/health': {
+          target: gatewayTarget,
+          changeOrigin: true,
+          secure: false,
+        },
+        '/api/health/detailed': {
+          target: gatewayTarget,
+          changeOrigin: true,
+          secure: false,
+        },
+        '/api/endpoints': {
+          target: mockTarget,
+          changeOrigin: true,
+          secure: false,
+        },
+        '/api/models': {
+          target: mockTarget,
+          changeOrigin: true,
+          secure: false,
+        },
+        '/api/assistants': {
+          target: mockTarget,
+          changeOrigin: true,
+          secure: false,
+          ws: true,
+        },
+        '/api/agents': {
+          target: mockTarget,
+          changeOrigin: true,
+          secure: false,
+          ws: true,
+        },
+        '/api': {
+          target: mockTarget,
+          changeOrigin: true,
+          secure: false,
+          ws: true,
+        },
+        '/health': {
+          target: gatewayTarget,
+          changeOrigin: true,
+          secure: false,
+        },
+        '/metrics': {
+          target: gatewayTarget,
+          changeOrigin: true,
+          secure: false,
+        },
+        '/orchestrator': {
+          target: orchestratorTarget,
+          changeOrigin: true,
+          secure: false,
+          ws: true,
+        },
       },
     },
-  },
   // Set the directory where environment variables are loaded from and restrict prefixes
   envDir: '../',
   envPrefix: ['VITE_', 'SCRIPT_', 'DOMAIN_', 'ALLOW_'],
@@ -247,14 +315,15 @@ export default defineConfig(({ command }) => ({
     },
     chunkSizeWarningLimit: 1500,
   },
-  resolve: {
-    alias: {
-      '~': path.join(__dirname, 'src/'),
-      $fonts: path.resolve(__dirname, 'public/fonts'),
-      'micromark-extension-math': 'micromark-extension-llm-math',
+    resolve: {
+      alias: {
+        '~': path.join(__dirname, 'src/'),
+        $fonts: path.resolve(__dirname, 'public/fonts'),
+        'micromark-extension-math': 'micromark-extension-llm-math',
+      },
     },
-  },
-}));
+  };
+});
 
 interface SourcemapExclude {
   excludeNodeModules?: boolean;

@@ -1,7 +1,7 @@
 {
-  "name": "@librechat/frontend",
-  "version": "v0.7.9-rc1",
-  "description": "",
+  "name": "@shopmindai/frontend",
+  "version": "0.1.0",
+  "description": "ShopMindAI web client",
   "type": "module",
   "scripts": {
     "data-provider": "cd .. && npm run build:data-provider",
@@ -18,15 +18,15 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/danny-avila/LibreChat.git"
+    "url": "git+https://github.com/shopmindai/chat.shopmindai2.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/danny-avila/LibreChat/issues"
+    "url": "https://github.com/shopmindai/chat.shopmindai2/issues"
   },
-  "homepage": "https://librechat.ai",
+  "homepage": "https://shopmind.ai",
   "dependencies": {
     "@ariakit/react": "^0.4.15",
     "@codesandbox/sandpack-react": "^2.19.10",

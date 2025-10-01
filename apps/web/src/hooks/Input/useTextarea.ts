@@ -40,7 +40,7 @@ export default function useTextarea({
   const [activePrompt, setActivePrompt] = useRecoilState(store.activePromptByIndex(index));
 
   const isNotAppendable =
-    (((latestMessage?.unfinished ?? false) && !isSubmitting) || (latestMessage?.error ?? false));
+    (latestMessage?.unfinished ?? false) && !isSubmitting;
 
   // Inserare prompt în textarea
   useEffect(() => {
