@@ -82,9 +82,8 @@ function ChatView({ index = 0 }: { index?: number }) {
                 <div
                   className={cn(
                     'flex min-h-0 flex-1 flex-col',
-                    isLandingPage
-                      ? 'items-center justify-center bg-surface-chat dark:bg-[#182533]'
-                      : '',
+                    'bg-surface-chat dark:bg-[#182533]',
+                    isLandingPage ? 'items-center justify-center' : '',
                   )}
                 >
                   {content}
