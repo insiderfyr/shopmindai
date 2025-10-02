@@ -86,7 +86,7 @@ const MessageRender = memo(
     const baseClasses = useMemo(
       () => ({
         common: 'group mx-auto flex flex-1 gap-3 transition-all duration-300 transform-gpu ',
-        card: 'relative w-full gap-1 rounded-lg border border-border-medium bg-surface-primary-alt p-2 md:w-1/2 md:gap-3 md:p-4',
+        card: 'relative w-full gap-1 rounded-lg bg-surface-chat dark:bg-[#182533] p-2 md:w-1/2 md:gap-3 md:p-4',
         chat: maximizeChatSpace
           ? 'w-full max-w-full md:px-5 lg:px-1 xl:px-5'
           : 'md:max-w-[47rem] xl:max-w-[55rem]',
