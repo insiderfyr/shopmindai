@@ -8,6 +8,7 @@ import { OpenIDIcon } from '~/components';
 import { getLoginError } from '~/utils';
 import { useLocalize } from '~/hooks';
 import LoginForm from './LoginForm';
+import SocialLoginRender from './SocialLoginRender';
 
 function Login() {
   const localize = useLocalize();
@@ -82,6 +83,7 @@ function Login() {
         error={error}
         setError={setError}
       />
+      <SocialLoginRender startupConfig={startupConfig} />
       <p className="my-4 text-center text-sm font-light text-gray-700 dark:text-white">
         {' '}
         {localize('com_auth_no_account')}{' '}

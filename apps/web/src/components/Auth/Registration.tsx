@@ -8,6 +8,7 @@ import { useLocalize, TranslationKeys, ThemeContext } from '~/hooks';
 import type { TLoginLayoutContext } from '~/common';
 import { Spinner, Button } from '~/components';
 import { ErrorMessage } from './ErrorMessage';
+import SocialLoginRender from './SocialLoginRender';
 
 // Local type definition for registration with separate first_name and last_name
 type TRegisterUserLocal = {
@@ -243,6 +244,8 @@ const Registration: React.FC = () => {
               </Button>
             </div>
           </form>
+
+          <SocialLoginRender startupConfig={startupConfig} />
 
           <p className="my-4 text-center text-sm font-light text-gray-700 dark:text-white">
             {localize('com_auth_already_have_account')}{' '}
